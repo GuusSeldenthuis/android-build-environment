@@ -2,9 +2,6 @@ FROM ubuntu:18.04
 
 MAINTAINER Guus Seldenthuis "guus1993@gmail.com"
 
-ENV LANG en_US.UTF-8
-RUN locale-gen $LANG
-
 ENV DOCKER_ANDROID_LANG en_US
 ENV DOCKER_ANDROID_DISPLAY_NAME mobileci-docker
 
