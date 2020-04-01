@@ -53,8 +53,8 @@ RUN apt-get install -y \
   --no-install-recommends
 
 # Clean apt
-RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get autoclean && apt autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
 
 # Install Android SDK
 RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
