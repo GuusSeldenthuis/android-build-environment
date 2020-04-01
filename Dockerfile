@@ -9,7 +9,7 @@ ENV DOCKER_ANDROID_DISPLAY_NAME mobileci-docker
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update apt-get, add JDK repo and upgrade outdated packages.
-RUN apt-get install software-properties-common
+RUN apt-get install apt-transport-https software-properties-common -y
 RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get update
 RUN apt-get upgrade -y
