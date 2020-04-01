@@ -9,7 +9,7 @@ ENV DOCKER_ANDROID_DISPLAY_NAME mobileci-docker
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update apt-get, add JDK repo and upgrade outdated packages.
-RUN apt-add-repository ppa:openjdk-r/ppa
+RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get update
 RUN apt-get upgrade -y
 
@@ -97,8 +97,8 @@ RUN id $RUN_USER || adduser --uid "$RUN_UID" \
     --disabled-password "$RUN_USER"
 
 # Fix permissions
-RUN chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME
-RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME
+RUN chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME
+RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME
 
 # Creating project directories prepared for build when running
 # `docker run`
@@ -108,4 +108,4 @@ RUN chown -R $RUN_USER:$RUN_USER $PROJECT
 WORKDIR $PROJECT
 
 USER $RUN_USER
-RUN echo -e "sdk.dir=$ANDROID_HOME\nndk.dir=$ANDROID_NDK_HOME" > local.properties
+RUN echo -e "sdk.dir=$ANDROID_HOME > local.properties
