@@ -1,8 +1,7 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
-MAINTAINER Tomáš Šůstek "tomas.sustek@dotykacka.cz"
+MAINTAINER Guus Seldenthuis "guus1993@gmail.com"
 
-# Sets language to UTF8 : this works in pretty much all cases
 ENV LANG en_US.UTF-8
 RUN locale-gen $LANG
 
@@ -12,10 +11,10 @@ ENV DOCKER_ANDROID_DISPLAY_NAME mobileci-docker
 # Never ask for confirmations
 ENV DEBIAN_FRONTEND noninteractive
 
-# Update apt-get
-RUN rm -rf /var/lib/apt/lists/*
+# Update apt-get, add JDK repo and upgrade outdated packages.
+RUN apt-add-repository ppa:openjdk-r/ppa
 RUN apt-get update
-RUN apt-get dist-upgrade -y
+RUN apt-get upgrade -y
 
 # Installing packages
 RUN apt-get install -y \
@@ -50,16 +49,12 @@ RUN apt-get install -y \
   wget \
   zip \
   zlib1g-dev \
+  openjdk-8-jdk
   --no-install-recommends
 
-# Install Java
-RUN apt-add-repository ppa:openjdk-r/ppa
-RUN apt-get update
-RUN apt-get -y install openjdk-8-jdk
-
-# Clean Up Apt-get
+# Clean apt
 RUN rm -rf /var/lib/apt/lists/*
-RUN apt-get clean
+RUN apt-get autoclean && apt autoremove -y
 
 # Install Android SDK
 RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
@@ -72,25 +67,20 @@ ENV ANDROID_COMPONENTS platform-tools,android-25,build-tools-23.0.2,build-tools-
 # Install Android tools
 RUN echo y | /usr/local/android-sdk/tools/android update sdk --filter "${ANDROID_COMPONENTS}" --no-ui -a
 
-# Install Android NDK
-RUN wget http://dl.google.com/android/repository/android-ndk-r16-linux-x86_64.zip
-RUN unzip android-ndk-r16-linux-x86_64.zip
-RUN mv android-ndk-r16 /usr/local/android-ndk
-RUN rm android-ndk-r16-linux-x86_64.zip
-
 # Environment variables
 ENV ANDROID_HOME /usr/local/android-sdk
 ENV ANDROID_SDK_HOME $ANDROID_HOME
-ENV ANDROID_NDK_HOME /usr/local/android-ndk
 ENV JENKINS_HOME $HOME
 ENV PATH ${INFER_HOME}/bin:${PATH}
 ENV PATH $PATH:$ANDROID_SDK_HOME/tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
+
+## TODO: filter-out unneeded build-tools.
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/23.0.2
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/24.0.0
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/25.0.3
-ENV PATH $PATH:$ANDROID_NDK_HOME
 
+## TODO Best JDK to use?
 # Export JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 
@@ -98,9 +88,6 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 ENV TERM dumb
 ENV JAVA_OPTS "-Xms4096m -Xmx4096m"
 ENV GRADLE_OPTS "-XX:+UseG1GC -XX:MaxGCPauseMillis=1000"
-
-# Cleaning
-RUN apt-get clean
 
 # Add build user account, values are set to default below
 ENV RUN_USER mobileci
