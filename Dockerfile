@@ -49,7 +49,7 @@ RUN apt-get install -y \
   wget \
   zip \
   zlib1g-dev \
-  openjdk-8-jdk
+  openjdk-8-jdk \
   --no-install-recommends
 
 # Clean apt
