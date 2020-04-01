@@ -9,13 +9,14 @@ ENV DOCKER_ANDROID_DISPLAY_NAME mobileci-docker
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update apt-get, add JDK repo and upgrade outdated packages.
-RUN apt-get install apt-transport-https software-properties-common -y
+RUN apt install -y apt-transport-https
+RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
-RUN apt-get update
-RUN apt-get upgrade -y
+RUN apt update
+RUN apt upgrade -y
 
 # Installing packages
-RUN apt-get install -y \
+RUN apt install -y \
   autoconf \
   build-essential \
   bzip2 \
@@ -50,7 +51,7 @@ RUN apt-get install -y \
   --no-install-recommends
 
 # Clean apt
-RUN apt-get autoclean && apt autoremove -y
+RUN apt autoclean && apt autoremove -y
 RUN rm -rf /var/lib/apt/lists/*
 
 # Install Android SDK
